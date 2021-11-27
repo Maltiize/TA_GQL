@@ -6,10 +6,16 @@ const typeDefs = gql`
     name: String!
     allowReview: Boolean!
     images: [String]
+    country: Country
+  }
+
+  type Country{
+    code: String,
+    locales: [String]
   }
 
   type Query {
-    getAllRestaurant(
+    restaurants(
       perPage: Int = 4,
       page: Int = 1
     ): [Restaurant!]!

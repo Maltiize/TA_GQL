@@ -1,7 +1,7 @@
 import { ApolloServer } from "apollo-server-express";
 import {Pool} from "pg";
 import typeDefs from "./schema/typedefs";
-import Postgres  from "./adapters/postgres";
+import Postgres  from "./middlewares/postgres";
 import express from "express";
 import config from "config";
 import Restaurant from "./datasources/restaurant";

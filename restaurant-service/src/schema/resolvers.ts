@@ -2,7 +2,7 @@ import { dataSources, pageArgs } from "../type";
 
 const resolvers = {
   Query: {
-    getAllRestaurant: async (
+    restaurants: async (
       _: any,
       args:pageArgs,
       { dataSources }: { dataSources: dataSources }

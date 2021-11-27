@@ -1,6 +1,6 @@
 const restaurants = {
-  query: {
-    text: "SELECT *  FROM restaurant ORDER BY restaurant_uuid DESC LIMIT $1 OFFSET $2",
+  get: {
+    text: "SELECT * FROM restaurant LEFT JOIN country on country.country_code = restaurant.country_code ORDER BY restaurant_uuid DESC LIMIT $1 OFFSET $2",
   },
   errorValidation: {
     page: {
