@@ -1,11 +1,11 @@
-import { dataSources, pageArgs } from "../type";
+import { DataSources, PageArgs } from "../interfaces/type";
 
 const resolvers = {
   Query: {
     restaurants: async (
       _: any,
-      args:pageArgs,
-      { dataSources }: { dataSources: dataSources }
+      args:PageArgs,
+      { dataSources }: { dataSources: DataSources }
     ) => {
       const allUsers = await dataSources.postgres.getAll(
         args.perPage || 4,

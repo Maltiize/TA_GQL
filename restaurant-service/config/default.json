@@ -1,12 +1,15 @@
 {
-    "server": {
-        "port": 3000
-    },
-    "database": {
-        "database": "thefork",
-        "host": "postgres",
-        "user": "postgres",
-        "password": "postgres",
-        "port": 5432
-    }
+  "server": {
+    "port": 3000
+  },
+  "database": {
+    "database": "thefork",
+    "host": "postgres",
+    "user": "postgres",
+    "password": "postgres",
+    "port": 5432
+  },
+  "api": {
+    "url": "http://image-service:3010/images"
+  }
 }

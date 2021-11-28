@@ -1,24 +1,27 @@
 import { ApolloServer } from "apollo-server-express";
-import {Pool} from "pg";
-import typeDefs from "./schema/typedefs";
-import Postgres  from "./middlewares/postgres";
 import express from "express";
 import config from "config";
+import typeDefs from "./schema/typedefs";
+import resolvers from "./schema/resolvers";
+import Postgres from "./connectors/postgres";
+import FetcherAPI from "./connectors/fetcherAPI";
 import Restaurant from "./datasources/restaurant";
-import resolvers from "./schema/resolvers"
 
 const main = async () => {
   const app = express();
-  let pool = new Pool({ connectionString: 'postgres://postgres:postgres@postgres:5432/thefork' });
-  const database = new Postgres(pool);
   const dataSources = () => ({
-    postgres: new Restaurant({database})
-  })
+    postgres: new Restaurant(
+      new Postgres(config.get("database")),
+      new FetcherAPI()
+    ),
+  });
+
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    dataSources
+    dataSources,
   });
+
   await server.start();
   server.applyMiddleware({ app });
   app.listen({ port: config.get("server.port") }, () =>
