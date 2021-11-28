@@ -1,10 +1,10 @@
-import { Pool } from 'pg';
+import { Pool } from "pg";
 
 class Postgres {
   private pool: Pool;
 
-  constructor(config:any) {
-    this.pool = new Pool(config);
+  constructor(pool: Pool) {
+    this.pool = pool;
   }
 
   async execute(query: any) {
@@ -15,4 +15,4 @@ class Postgres {
   }
 }
 
-export default Postgres
+export default Postgres;

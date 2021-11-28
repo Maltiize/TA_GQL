@@ -1,33 +1,42 @@
 import Postgres from "../connectors/postgres";
 import FetcherAPI from "../connectors/fetcherAPI";
 import sql from "../constants/sql";
-import config from "config";
 import { DataSource } from "apollo-datasource";
 import { RestaurantResult } from "../interfaces/type";
 import { AxiosResponse } from "axios";
-
+import Redis from "../connectors/redis";
+import config from "config";
 class Restaurant extends DataSource {
   private database: Postgres;
   private api: FetcherAPI;
+  private redis: Redis;
 
-  constructor(database: Postgres, api: FetcherAPI) {
+  constructor(database: Postgres, api: FetcherAPI, redis: Redis) {
     super();
     this.database = database;
     this.api = api;
+    this.redis = redis;
   }
 
   async getAll(perPage: number = 4, page: number = 1) {
+    const cached = await this.redis.getKey(config.get("redis.keys.restaurant"));
+    if (cached) {
+      return JSON.parse(cached);
+    }
     Object.assign(sql.get, { values: [perPage, (page - 1) * perPage] });
     const result = await this.database.execute(sql.get);
-    const res: AxiosResponse = await this.api.getPosts(config.get("api.url"));
-    return result.map((x: RestaurantResult) =>
+    const res: AxiosResponse = await this.api.getPosts();
+    result.map((x: RestaurantResult) =>
       this.normalize(
         x,
-        res.data.images.filter(
-          (image: any) => image.imageUuid == x.image_uuid
-        )
+        res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
+    await this.redis.setKey(
+      config.get("redis.keys.restaurant"),
+      JSON.stringify(result)
+    );
+    return result;
   }
 
   private normalize(data: RestaurantResult, imgs: any) {

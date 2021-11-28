@@ -61,6 +61,19 @@ services:
     networks:
       - dev
 
+  redis:
+    image: redis:alpine
+    container_name: redis_db
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+    restart: always
+    networks:
+      - dev
+
 networks:
   dev:
     external: true
+    driver: bridge

@@ -11,5 +11,12 @@
   },
   "api": {
     "url": "http://image-service:3010/images"
+  },
+  "redis": {
+    "url": "redis://:@redis:6379",
+    "ttl": 10,
+    "keys": {
+      "restaurant": "restaurant:all"
+    }
   }
 }
