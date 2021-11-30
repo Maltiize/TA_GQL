@@ -5,7 +5,7 @@ import { DataSource } from "apollo-datasource";
 import { RestaurantResult } from "../interfaces/type";
 import { AxiosResponse } from "axios";
 import Redis from "../connectors/redis";
-import config from "config";
+import redisQueries from "../constants/redis";
 class Restaurant extends DataSource {
   private database: Postgres;
   private api: FetcherAPI;
@@ -19,7 +19,8 @@ class Restaurant extends DataSource {
   }
 
   async getAll(perPage: number = 4, page: number = 1) {
-    const cached = await this.redis.getKey(config.get("redis.keys.restaurant"));
+    const redisKey = redisQueries.keys.getRestaurants + `:${perPage}:${page}`;
+    const cached = await this.redis.getKey(redisKey);
     if (cached) {
       return JSON.parse(cached);
     }
@@ -32,10 +33,7 @@ class Restaurant extends DataSource {
         res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
-    await this.redis.setKey(
-      config.get("redis.keys.restaurant"),
-      JSON.stringify(result)
-    );
+    await this.redis.setKey(redisKey, JSON.stringify(result));
     return result;
   }
 

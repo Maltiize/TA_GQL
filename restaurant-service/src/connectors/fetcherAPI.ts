@@ -1,15 +1,15 @@
 import { AxiosStatic } from "axios";
-import config from "config";
-
 class fetcherAPI {
   private axios: AxiosStatic;
+  private url: string;
 
-  constructor(axios: AxiosStatic) {
+  constructor(axios: AxiosStatic, url:string) {
     this.axios = axios;
+    this.url = url;
   }
 
   async getPosts() {
-    return await this.axios.get(config.get("api.url"));
+    return await this.axios.get(this.url);
   }
 }
 export default fetcherAPI;

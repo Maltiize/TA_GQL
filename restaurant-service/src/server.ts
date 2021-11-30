@@ -19,7 +19,7 @@ const main = async () => {
   const dataSources = () => ({
     postgres: new Restaurant(
       new Postgres(new Pool(config.get("database"))),
-      new FetcherAPI(axios),
+      new FetcherAPI(axios,config.get('api.url')),
       new Redis(test)
     ),
   });
