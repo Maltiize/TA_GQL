@@ -13,14 +13,14 @@ import Redis from "./connectors/redis";
 
 const main = async () => {
   const app = express();
-  let test = createClient({url: config.get("redis.url")});
+  let test = createClient({ url: config.get("redis.url") });
   await test.connect();
 
   const dataSources = () => ({
     postgres: new Restaurant(
       new Postgres(new Pool(config.get("database"))),
-      new FetcherAPI(axios,config.get('api.url')),
-      new Redis(test)
+      new FetcherAPI(axios, config.get("api.url")),
+      new Redis(test, config.get("redis.ttl"))
     ),
   });
 
