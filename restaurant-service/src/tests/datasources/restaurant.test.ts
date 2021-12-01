@@ -5,6 +5,7 @@ import Postgres from "../../connectors/postgres";
 import FetcherAPI from "../../connectors/fetcherAPI";
 import Redis from "../../connectors/redis";
 import sql from "../../constants/sql";
+import redisQueries from "../../constants/redis";
 
 
 const mockPostgres = mock<Postgres>() as any;
@@ -22,7 +23,8 @@ describe("restaurant  Tests", () => {
   });
 
   test("test restaurant getAll method  cache", async () => {
-    mockRedis.getKey.mockReturnValue(JSON.stringify(finalResult));
+    const redisKey = redisQueries.getRestaurants.query + ":4:1";
+    mockRedis.getKey.calledWith(redisKey).mockReturnValue(JSON.stringify(finalResult));
     const restaurant = new Restaurant(mockPostgres, mockFetcherApi, mockRedis);
     expect(await restaurant.getAll(4,1)).toStrictEqual(finalResult);
   });
