@@ -1,6 +1,7 @@
 const restaurants = {
-  keys: {
-    getRestaurants: "restaurant:all",
+  getRestaurants: {
+    query: "restaurant:all",
+    ttl: 10,
   },
 };
 

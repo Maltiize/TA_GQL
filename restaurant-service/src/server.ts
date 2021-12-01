@@ -20,7 +20,7 @@ const main = async () => {
     restaurants: new Restaurant(
       new Postgres(new Pool(config.get("database"))),
       new FetcherAPI(axios, config.get("api.url")),
-      new Redis(redisClient, config.get("redis.ttl"))
+      new Redis(redisClient)
     ),
   });
 

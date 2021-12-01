@@ -1,10 +1,8 @@
 class Redis {
   private client: any;
-  private ttl: number;
 
-  constructor(client: any, ttl: number) {
+  constructor(client: any) {
     this.client = client;
-    this.ttl = ttl;
   }
 
   async getKey(key: string) {
@@ -14,9 +12,9 @@ class Redis {
     return await this.client.get(key);
   }
 
-  async setKey(key: string, value: string) {
+  async setKey(key: string, value: string, ttl: number) {
     await this.client.set(key, value);
-    this.client.expire(key, this.ttl);
+    this.client.expire(key, ttl);
   }
 }
 

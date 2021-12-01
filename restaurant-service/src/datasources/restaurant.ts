@@ -19,7 +19,8 @@ class Restaurant extends DataSource {
   }
 
   async getAll(perPage: number = 4, page: number = 1) {
-    const redisKey = redisQueries.keys.getRestaurants + `:${perPage}:${page}`;
+    const redisQuery = redisQueries.getRestaurants;
+    const redisKey = redisQueries.getRestaurants.query + `:${perPage}:${page}`;
     const cached = await this.redis.getKey(redisKey);
     if (cached) {
       return JSON.parse(cached);
@@ -33,7 +34,7 @@ class Restaurant extends DataSource {
         res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
-    await this.redis.setKey(redisKey, JSON.stringify(result));
+    await this.redis.setKey(redisKey, JSON.stringify(result), redisQuery.ttl);
     return result;
   }
 
