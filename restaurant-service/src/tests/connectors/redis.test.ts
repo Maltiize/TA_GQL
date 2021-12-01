@@ -17,12 +17,16 @@ describe("Redis Tests", () => {
   });
 
   test("test getPosts axios not working", async () => {
-    mockRedis.get.calledWith("key").mockImplementation((str: any) => {
-      throw new Error(str);
+    mockRedis.get.mockImplementation(() => {
+      throw new Error("error");
     });
-    const api = new Redis(mockRedis, 10);
-    expect(async () => {
-      await api.getKey("key");
-    }).rejects.toThrow();
+    const redis = new Redis(mockRedis, 10);
+    try {
+      await redis.getKey("key");
+      // to make sure we never reach that one
+      expect(true).toBe(false);
+    } catch (error) {
+      expect(error).toStrictEqual(new Error("error"));
+    }
   });
 });
