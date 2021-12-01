@@ -1,15 +1,16 @@
-import { DataSources, PageArgs } from "../interfaces/type";
+import { DataSources, QueryArgs } from "../interfaces/type";
 
 const resolvers = {
   Query: {
     restaurants: async (
       _: any,
-      args:PageArgs,
+      args:QueryArgs,
       { dataSources }: { dataSources: DataSources }
     ) => {
       const allUsers = await dataSources.restaurants.getAll(
         args.perPage || 4,
-        args.page || 1
+        args.page || 1,
+        args.imageOnly || false
       );
       return allUsers;
     } 

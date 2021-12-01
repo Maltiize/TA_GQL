@@ -18,15 +18,16 @@ class Restaurant extends DataSource {
     this.redis = redis;
   }
 
-  async getAll(perPage: number = 4, page: number = 1) {
+  async getAll(perPage: number = 4, page: number = 1, imageOnly:boolean = false) {
     const redisQuery:redisQuery = redisQueries.getRestaurants;
-    const redisKey = redisQueries.getRestaurants.query + `:${perPage}:${page}`;
+    const redisKey = redisQueries.getRestaurants.query + `:${perPage}:${page}:${imageOnly}`;
     const cached = await this.redis.getKey(redisKey);
     if (cached) {
       return JSON.parse(cached);
     }
-    Object.assign(sql.get, { values: [perPage, (page - 1) * perPage] });
-    const result = await this.database.execute(sql.get);
+    const query = imageOnly ? sql.getOnlyImg : sql.get;
+    Object.assign(query, { values: [perPage, (page - 1) * perPage] });
+    const result = await this.database.execute(query);
     const res: AxiosResponse = await this.api.getPosts();
     result.map((x: RestaurantResult) =>
       this.normalize(
@@ -35,7 +36,7 @@ class Restaurant extends DataSource {
       )
     );
     await this.redis.setKey(redisKey, JSON.stringify(result), redisQuery.ttl);
-    
+
     return result;
   }
 

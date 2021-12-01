@@ -17,7 +17,8 @@ const typeDefs = gql`
   type Query {
     restaurants(
       perPage: Int = 4,
-      page: Int = 1
+      page: Int = 1, 
+      imageOnly: Boolean = false
     ): [Restaurant!]!
   }
 `;

@@ -1,8 +1,9 @@
 import Restaurant from "../datasources/restaurant";
 
-export interface PageArgs {
+export interface QueryArgs {
   perPage: number;
   page: number;
+  imageOnly:boolean;
 }
 
 export interface DataSources {
