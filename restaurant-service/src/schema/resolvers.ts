@@ -7,7 +7,7 @@ const resolvers = {
       args:PageArgs,
       { dataSources }: { dataSources: DataSources }
     ) => {
-      const allUsers = await dataSources.postgres.getAll(
+      const allUsers = await dataSources.restaurants.getAll(
         args.perPage || 4,
         args.page || 1
       );

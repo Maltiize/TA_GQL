@@ -6,7 +6,7 @@ export interface PageArgs {
 }
 
 export interface DataSources {
-  postgres: Restaurant;
+  restaurants: Restaurant;
 }
 
 export interface RestaurantResult {
