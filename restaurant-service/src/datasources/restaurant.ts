@@ -2,7 +2,7 @@ import Postgres from "../connectors/postgres";
 import FetcherAPI from "../connectors/fetcherAPI";
 import sql from "../constants/sql";
 import { DataSource } from "apollo-datasource";
-import { RestaurantResult } from "../interfaces/type";
+import { RestaurantResult, redisQuery } from "../interfaces/type";
 import { AxiosResponse } from "axios";
 import Redis from "../connectors/redis";
 import redisQueries from "../constants/redis";
@@ -19,7 +19,7 @@ class Restaurant extends DataSource {
   }
 
   async getAll(perPage: number = 4, page: number = 1) {
-    const redisQuery = redisQueries.getRestaurants;
+    const redisQuery:redisQuery = redisQueries.getRestaurants;
     const redisKey = redisQueries.getRestaurants.query + `:${perPage}:${page}`;
     const cached = await this.redis.getKey(redisKey);
     if (cached) {
@@ -35,6 +35,7 @@ class Restaurant extends DataSource {
       )
     );
     await this.redis.setKey(redisKey, JSON.stringify(result), redisQuery.ttl);
+    
     return result;
   }
 

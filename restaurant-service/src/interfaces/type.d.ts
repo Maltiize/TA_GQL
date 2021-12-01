@@ -28,3 +28,8 @@ export interface RestaurantGQL {
     images: [String]
     country: any
 }
+
+export interface redisQuery{
+  query:string;
+  ttl:number;
+}
