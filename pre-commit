@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Running tests"
+npm test --prefix ./restaurant-service
+if [ $? != 0 ]
+then
+        echo "Fix the error before commit."
+        exit 1
+fi
+exit $?
