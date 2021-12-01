@@ -3,7 +3,7 @@ export const postgresResult = [
     restaurant_uuid: "0095ed3b-55a5-446e-980f-cbce6b357dcf",
     name: "Green House",
     country_code: "ES",
-    image_uuid: null,
+    image_uuid: "b228cef9-e8b3-4f0d-b1ac-983ad28b9462",
     locales: ["es_ES", "ca_ES", "eu_ES", "gl_ES"],
   },
   {
@@ -56,11 +56,13 @@ export const finalResult = [
     restaurant_uuid: "0095ed3b-55a5-446e-980f-cbce6b357dcf",
     name: "Green House",
     country_code: "ES",
-    image_uuid: null,
+    image_uuid: "b228cef9-e8b3-4f0d-b1ac-983ad28b9462",
     locales: ["es_ES", "ca_ES", "eu_ES", "gl_ES"],
     restaurantUuid: "0095ed3b-55a5-446e-980f-cbce6b357dcf",
     country: { code: "ES", locales: ["es_ES", "ca_ES", "eu_ES", "gl_ES"] },
-    images: [],
+    images: [
+      "https://cdn.pastemagazine.com/www/system/images/photo_albums/silicon-valley-memes/large/unspecified-1.jpg?1384968217",
+    ],
   },
   {
     restaurant_uuid: "03382530-327c-4b76-b4c9-05f313f4e624",
