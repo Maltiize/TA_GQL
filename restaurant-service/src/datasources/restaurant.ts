@@ -27,7 +27,7 @@ class Restaurant extends DataSource {
     perPage: number = 4,
     page: number = 1,
     imageOnly: boolean = false
-  ) : Promise<PaginatedResult>{
+  ): Promise<PaginatedResult> {
     const redisQuery: redisQuery = redisQueries.getRestaurants;
     const redisKey =
       redisQueries.getRestaurants.query + `:${perPage}:${page}:${imageOnly}`;
@@ -45,9 +45,15 @@ class Restaurant extends DataSource {
         res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
+    const total = await this.getTotal(imageOnly);
+    const pagination: Pagination = {
+      total: total,
+      pageCount: Math.ceil(total / perPage),
+      currentPage: page,
+    };
     const finalResult: PaginatedResult = {
       restaurants: result,
-      pagination: await this.getPagination(perPage, page, imageOnly),
+      pagination: pagination,
     };
     await this.redis.setKey(
       redisKey,
@@ -57,30 +63,17 @@ class Restaurant extends DataSource {
     return finalResult;
   }
 
-  private async getPagination(
-    perPage: number,
-    page: number,
-    imageOnly: boolean = false
-  ): Promise<Pagination> {
+  private async getTotal(imageOnly: boolean = false): Promise<number> {
     const redisQuery = redisQueries.getRestaurantsCount;
     const redisKey = redisQuery.query + `:${imageOnly}`;
     const cached = await this.redis.getKey(redisKey);
     if (cached) {
-      return JSON.parse(cached);
+      return cached;
     }
     const queryCount = imageOnly ? sql.getOnlyImgCount : sql.getCount;
     const resultCount = await this.database.execute(queryCount);
-    const pagination: Pagination = {
-      total: resultCount[0].count,
-      pageCount: Math.ceil(resultCount[0].count / perPage),
-      currentPage: page,
-    };
-    await this.redis.setKey(
-      redisKey,
-      JSON.stringify(pagination),
-      redisQuery.ttl
-    );
-    return pagination;
+    await this.redis.setKey(redisKey, resultCount[0].count, redisQuery.ttl);
+    return resultCount[0].count;
   }
 
   private normalize(data: RestaurantResult, imgs: any) {
