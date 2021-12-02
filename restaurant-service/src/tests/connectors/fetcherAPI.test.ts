@@ -4,11 +4,14 @@ import { AxiosStatic } from "axios";
 
 const mockAxios = mock<AxiosStatic>() as any;
 
-beforeEach(() => {
-  mockAxios.mockClear();
-});
+
 
 describe("Fetcher Api Tests", () => {
+
+  beforeEach(() => {
+    mockAxios.mockClear();
+  });
+
   test("test getPosts method", async () => {
     mockAxios.get
       .calledWith("http://image-service:3010/images")
