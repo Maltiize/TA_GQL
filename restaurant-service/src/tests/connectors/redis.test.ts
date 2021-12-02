@@ -3,10 +3,12 @@ import Redis from "../../connectors/redis";
 
 const mockRedis = mock<any>() as any;
 
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
 describe("Redis Tests", () => {
-  beforeEach(() => {
-    mockRedis.mockClear();
-  });
+  
   test("test get method", async () => {
     mockRedis.get.calledWith("key").mockReturnValue('{"data":"hello"}');
     mockRedis.get.calledWith("badkey").mockReturnValue(null);

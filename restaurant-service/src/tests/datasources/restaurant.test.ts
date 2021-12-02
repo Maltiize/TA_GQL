@@ -10,22 +10,11 @@ const mockRedis = mock<Redis>() as any;
 const mockPostgres = mock<Postgres>() as any;
 const mockFetcherApi = mock<FetcherAPI>() as any;
 
- 
-beforeEach(() => {
-  mockRedis.mockClear();
-  mockFetcherApi.mockClear();
-  mockPostgres.mockClear();
+afterEach(() => {
+  jest.resetAllMocks();
 });
 
 describe("restaurant  Tests", () => {
-   
-    beforeEach(() => {
-      mockRedis.mockClear();
-      mockFetcherApi.mockClear();
-      mockPostgres.mockClear();
-      });
-
-
   test("test restaurant getAll method  cache", async () => {
     const redisKey = redisQueries.getRestaurants.query + ":4:1:false";
     mockRedis.getKey
@@ -35,7 +24,6 @@ describe("restaurant  Tests", () => {
     expect(await restaurant.getAll(4, 1)).toStrictEqual(finalResult);
   });
 
-  
   test("test restaurant getAll method no cache", async () => {
     Object.assign(sql.get, { values: [4, 0] });
     mockRedis.getKey.mockReturnValue(null);
@@ -47,5 +35,17 @@ describe("restaurant  Tests", () => {
     const restaurant = new Restaurant(mockPostgres, mockFetcherApi, mockRedis);
     expect(await restaurant.getAll(4, 1)).toStrictEqual(finalResult);
   });
-
+  
+  test("test restaurant getAll method no cache not working", async () => {
+    Object.assign(sql.get, { values: [4, 0] });
+    mockRedis.getKey.mockReturnValue(null);
+    mockPostgres.execute.calledWith(sql.get).mockReturnValue(postgresResult);
+    mockPostgres.execute
+      .calledWith(sql.getCount)
+      .mockReturnValue([{ count: 3 }]);
+    mockFetcherApi.getPosts.mockReturnValue(apiResult);
+    const restaurant = new Restaurant(mockPostgres, mockFetcherApi, mockRedis);
+    expect(await restaurant.getAll(4, 1)).not.toStrictEqual(finalResult);
+  });
 });
+

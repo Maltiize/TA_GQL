@@ -6,11 +6,11 @@ const mockPool = mock<Pool>() as any;
 const mockClient = mock<PoolClient>() as any;
 
 
-describe("postgres  Tests", () => {
+afterEach(() => {
+  jest.resetAllMocks();
+});
 
-  beforeEach(() => {
-    mockPool.mockClear();
-  });
+describe("postgres  Tests", () => {
 
   test("test postgres execute method", async () => {
     const result = { rows: [1, 2, 3] };

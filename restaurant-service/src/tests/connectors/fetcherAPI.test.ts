@@ -5,12 +5,11 @@ import { AxiosStatic } from "axios";
 const mockAxios = mock<AxiosStatic>() as any;
 
 
+afterEach(() => {
+  jest.resetAllMocks();
+});
 
 describe("Fetcher Api Tests", () => {
-
-  beforeEach(() => {
-    mockAxios.mockClear();
-  });
 
   test("test getPosts method", async () => {
     mockAxios.get
