@@ -2,7 +2,7 @@ import { DataSources, QueryArgs } from "../interfaces/type";
 
 const resolvers = {
   Query: {
-    restaurants: async (
+    getRestaurants: async (
       _: any,
       args:QueryArgs,
       { dataSources }: { dataSources: DataSources }

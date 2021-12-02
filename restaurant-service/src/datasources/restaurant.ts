@@ -2,7 +2,7 @@ import Postgres from "../connectors/postgres";
 import FetcherAPI from "../connectors/fetcherAPI";
 import sql from "../constants/sql";
 import { DataSource } from "apollo-datasource";
-import { RestaurantResult, redisQuery } from "../interfaces/type";
+import { RestaurantResult, redisQuery, Pagination } from "../interfaces/type";
 import { AxiosResponse } from "axios";
 import Redis from "../connectors/redis";
 import redisQueries from "../constants/redis";
@@ -18,16 +18,28 @@ class Restaurant extends DataSource {
     this.redis = redis;
   }
 
-  async getAll(perPage: number = 4, page: number = 1, imageOnly:boolean = false) {
-    const redisQuery:redisQuery = redisQueries.getRestaurants;
-    const redisKey = redisQueries.getRestaurants.query + `:${perPage}:${page}:${imageOnly}`;
+  async getAll(
+    perPage: number = 4,
+    page: number = 1,
+    imageOnly: boolean = false
+  ) {
+    const redisQuery: redisQuery = redisQueries.getRestaurants;
+    const redisKey =
+      redisQueries.getRestaurants.query + `:${perPage}:${page}:${imageOnly}`;
     const cached = await this.redis.getKey(redisKey);
     if (cached) {
       return JSON.parse(cached);
     }
     const query = imageOnly ? sql.getOnlyImg : sql.get;
+    const queryCount = imageOnly ? sql.getOnlyImgCount : sql.getCount;
     Object.assign(query, { values: [perPage, (page - 1) * perPage] });
     const result = await this.database.execute(query);
+    const resultCount = await this.database.execute(queryCount);
+    const pa: Pagination = {
+      total: resultCount[0].count,
+      pageCount: Math.ceil(resultCount[0].count / perPage),
+      currentPage: page,
+    };
     const res: AxiosResponse = await this.api.getPosts();
     result.map((x: RestaurantResult) =>
       this.normalize(
@@ -35,9 +47,13 @@ class Restaurant extends DataSource {
         res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
-    await this.redis.setKey(redisKey, JSON.stringify(result), redisQuery.ttl);
-
-    return result;
+    const finalResult = { restaurants: result, pagination: pa };
+    await this.redis.setKey(
+      redisKey,
+      JSON.stringify(finalResult),
+      redisQuery.ttl
+    );
+    return finalResult;
   }
 
   private normalize(data: RestaurantResult, imgs: any) {

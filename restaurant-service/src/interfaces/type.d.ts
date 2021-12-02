@@ -22,6 +22,12 @@ export interface RestaurantResult {
   country: any
 }
 
+export interface Pagination{
+  total:Int
+  pageCount:Int
+  currentPage:Int
+}
+
 export interface RestaurantGQL {
     restaurantUuid: String
     name: String

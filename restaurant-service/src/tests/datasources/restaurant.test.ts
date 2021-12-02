@@ -17,6 +17,7 @@ describe("restaurant  Tests", () => {
     Object.assign(sql.get, { values: [4, 0] });  
     mockRedis.getKey.mockReturnValue(null);
     mockPostgres.execute.calledWith(sql.get).mockReturnValue(postgresResult);
+    mockPostgres.execute.calledWith(sql.getCount).mockReturnValue([{count:5}]);
     mockFetcherApi.getPosts.mockReturnValue(apiResult);
     const restaurant = new Restaurant(mockPostgres, mockFetcherApi, mockRedis);
     expect(await restaurant.getAll(4,1)).toStrictEqual(finalResult);

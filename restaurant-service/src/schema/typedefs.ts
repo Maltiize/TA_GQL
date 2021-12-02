@@ -9,17 +9,28 @@ const typeDefs = gql`
     country: Country
   }
 
-  type Country{
-    code: String,
+  type Pagination {
+    total: Int
+    pageCount: Int
+    currentPage: Int
+  }
+
+  type Country {
+    code: String
     locales: [String]
   }
 
+  type RestaurantResult{
+    restaurants: [Restaurant!]!
+    pagination: Pagination
+  }
+
   type Query {
-    restaurants(
-      perPage: Int = 4,
-      page: Int = 1, 
+    getRestaurants(
+      perPage: Int = 4
+      page: Int = 1
       imageOnly: Boolean = false
-    ): [Restaurant!]!
+    ): RestaurantResult
   }
 `;
 
