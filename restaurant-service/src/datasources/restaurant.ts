@@ -2,7 +2,7 @@ import Postgres from "../connectors/postgres";
 import FetcherAPI from "../connectors/fetcherAPI";
 import sql from "../constants/sql";
 import { DataSource } from "apollo-datasource";
-import { RestaurantResult, redisQuery, Pagination } from "../interfaces/type";
+import { RestaurantResult, redisQuery, Pagination, PaginatedResult } from "../interfaces/type";
 import { AxiosResponse } from "axios";
 import Redis from "../connectors/redis";
 import redisQueries from "../constants/redis";
@@ -47,7 +47,7 @@ class Restaurant extends DataSource {
         res.data.images.filter((image: any) => image.imageUuid == x.image_uuid)
       )
     );
-    const finalResult = { restaurants: result, pagination: pa };
+    const finalResult:PaginatedResult = { restaurants: result, pagination: pa };
     await this.redis.setKey(
       redisKey,
       JSON.stringify(finalResult),
