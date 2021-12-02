@@ -6,17 +6,25 @@ import FetcherAPI from "../../connectors/fetcherAPI";
 import Redis from "../../connectors/redis";
 import sql from "../../constants/sql";
 import redisQueries from "../../constants/redis";
+const mockRedis = mock<Redis>() as any;
+const mockPostgres = mock<Postgres>() as any;
+const mockFetcherApi = mock<FetcherAPI>() as any;
+
+ 
+beforeEach(() => {
+  mockRedis.mockClear();
+  mockFetcherApi.mockClear();
+  mockPostgres.mockClear();
+});
 
 describe("restaurant  Tests", () => {
-  const mockRedis = mock<Redis>() as any;
-  const mockPostgres = mock<Postgres>() as any;
-  const mockFetcherApi = mock<FetcherAPI>() as any;
-  
-  beforeEach(() => {
-    mockRedis.mockClear();
-    mockFetcherApi.mockClear();
-    mockPostgres.mockClear();
-  });
+   
+    beforeEach(() => {
+      mockRedis.mockClear();
+      mockFetcherApi.mockClear();
+      mockPostgres.mockClear();
+      });
+
 
   test("test restaurant getAll method  cache", async () => {
     const redisKey = redisQueries.getRestaurants.query + ":4:1:false";
