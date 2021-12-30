@@ -43,3 +43,14 @@ export interface redisQuery {
   query: string;
   ttl: number;
 }
+
+export interface SQLQuery {
+  text: string;
+}
+export interface ImageApiResult {
+  imageUuid: text;
+  url: text;
+}
+export interface CountResult {
+  count: number;
+}

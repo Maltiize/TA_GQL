@@ -19,7 +19,9 @@
     "lib": ["dom", "es2020", "esnext.asynciterable"],
     "sourceMap": true,
     "emitDecoratorMetadata": true,
-    "strict": false,
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "alwaysStrict": true,
     "experimentalDecorators": true,
     "outDir": "dist",
     "rootDir": "src",
@@ -32,7 +34,8 @@
   "include": [
     "exercise/src/**/*",
     "./src/**/*.ts",
-    "./src/**/*.tsx", "config/*",
+    "./src/**/*.tsx",
+    "config/*",
     "exercise/src/**/*.json"
   ]
 }

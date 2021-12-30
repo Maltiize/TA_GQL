@@ -16,6 +16,9 @@ class Redis {
     await this.client.set(key, value);
     this.client.expire(key, ttl);
   }
+  async del(key: string) {
+    await this.client.del(key);
+  }
 }
 
 export default Redis;
