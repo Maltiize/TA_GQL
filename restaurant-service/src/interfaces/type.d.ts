@@ -16,8 +16,13 @@ export interface RestaurantResult {
   restaurantUuid: String;
   image_uuid: string;
   allowReview: Boolean;
-  images: any;
-  country: any;
+  images: [String];
+  country: Country;
+}
+
+export interface Country{
+  locales: [String];
+  code: string;
 }
 
 export interface Pagination {
@@ -36,7 +41,7 @@ export interface RestaurantGQL {
   name: String;
   allowReview: Boolean;
   images: [String];
-  country: any;
+  country: Country;
 }
 
 export interface redisQuery {

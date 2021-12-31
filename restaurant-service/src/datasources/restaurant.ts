@@ -45,7 +45,7 @@ class Restaurant extends DataSource {
     }
     const query: SQLQuery = imageOnly ? sql.getOnlyImg : sql.get;
     Object.assign(query, { values: [perPage, (page - 1) * perPage] });
-    const result: [RestaurantResult] = await this.database.execute(query);
+    const result: [RestaurantResult] = await this.database.execute(query) as [RestaurantResult];
     const res: AxiosResponse = await this.api.getPosts();
     result.map((x: RestaurantResult) =>
       this.normalize(
@@ -81,7 +81,7 @@ class Restaurant extends DataSource {
       return cached;
     }
     const queryCount: SQLQuery = imageOnly ? sql.getOnlyImgCount : sql.getCount;
-    const resultCount: [CountResult] = await this.database.execute(queryCount);
+    const resultCount: [CountResult] = await this.database.execute(queryCount) as [CountResult];
     await this.redis.setKey(
       redisKey,
       String(resultCount[0].count),
@@ -96,7 +96,7 @@ class Restaurant extends DataSource {
       code: data.country_code,
       locales: data.locales,
     };
-    data.images = imgs.map((x: ImageApiResult) => x.url);
+    data.images = imgs.map((x: ImageApiResult) => x.url) as [String];
     return data;
   }
 }
