@@ -1,4 +1,6 @@
 import { DataSources, QueryArgs } from "../interfaces/type";
+import { pageNumber, numberEl } from "../constants/default.value";
+
 
 const resolvers = {
   Query: {
@@ -8,8 +10,8 @@ const resolvers = {
       { dataSources }: { dataSources: DataSources }
     ) => {
       const allUsers = await dataSources.restaurants.getAll(
-        args.perPage || 4,
-        args.page || 1,
+        args.perPage || numberEl,
+        args.page || pageNumber,
         args.imageOnly || false
       );
       return allUsers;
